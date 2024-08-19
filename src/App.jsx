@@ -1,35 +1,131 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import ZombieFighters from "./ZombieFighters.jsx"
+import { useState, Fragment } from 'react'
 import './App.css'
+import TeamRoster from './TeamRoster.jsx'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+
+  const [team, setTeam] = useState([])
+  const [totalStrength, setStrength] = useState(0)
+  const [totalAgility, setAgility] = useState(0)
+  const [money, setMoney] = useState(100)
+  const [zombieFighters, setZombieFighters] = useState([
+    {
+      name: 'Survivor',
+      price: 12,
+      strength: 6,
+      agility: 4,
+      img: 'https://via.placeholder.com/150/92c952',
+    },
+    {
+      name: 'Scavenger',
+      price: 10,
+      strength: 5,
+      agility: 5,
+      img: 'https://via.placeholder.com/150/771796',
+    },
+    {
+      name: 'Shadow',
+      price: 18,
+      strength: 7,
+      agility: 8,
+      img: 'https://via.placeholder.com/150/24f355',
+    },
+    {
+      name: 'Tracker',
+      price: 14,
+      strength: 7,
+      agility: 6,
+      img: 'https://via.placeholder.com/150/d32776',
+    },
+    {
+      name: 'Sharpshooter',
+      price: 20,
+      strength: 6,
+      agility: 8,
+      img: 'https://via.placeholder.com/150/1ee8a4',
+    },
+    {
+      name: 'Medic',
+      price: 15,
+      strength: 5,
+      agility: 7,
+      img: 'https://via.placeholder.com/150/66b7d2',
+    },
+    {
+      name: 'Engineer',
+      price: 16,
+      strength: 6,
+      agility: 5,
+      img: 'https://via.placeholder.com/150/56acb2',
+    },
+    {
+      name: 'Brawler',
+      price: 11,
+      strength: 8,
+      agility: 3,
+      img: 'https://via.placeholder.com/150/8985dc',
+    },
+    {
+      name: 'Infiltrator',
+      price: 17,
+      strength: 5,
+      agility: 9,
+      img: 'https://via.placeholder.com/150/392537',
+    },
+    {
+      name: 'Leader',
+      price: 22,
+      strength: 7,
+      agility: 6,
+      img: 'https://via.placeholder.com/150/602b9e',
+    },
+  ])
+
+
+  const handleAddFighter = (fighter) => {
+    if (money < fighter.price) {
+      console.log('Not enough money')
+    } else {
+      const newTeamArray = [...team, fighter]
+      setTeam(newTeamArray)
+      setMoney(money - fighter.price)
+      setStrength(totalStrength + fighter.strength)
+      setAgility(totalAgility + fighter.agility)
+    }
+  }
+
+  const handleRemoveFighter = (fighter, idx) => {
+    const newTeamArray = team.filter((f, index)=> index !== idx)
+    setTeam(newTeamArray)
+    setMoney(money + fighter.price)
+    setStrength(totalStrength - fighter.strength)
+    setAgility(totalAgility - fighter.agility)
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Zombie Fighters</h1>
+      <h2>Money: {money}</h2>
+      <h2>Team Strength: {totalStrength}</h2>
+      <h2>Team Agility: {totalAgility}</h2>
+      <h2>Team: </h2>
+      {team.length === 0 ? <p>Pick some team members!</p> : <TeamRoster team={ team } handleRemoveFighter={handleRemoveFighter} /> }
+      <h2>Fighters</h2>
+      <ul>
+            {team.map((fighter) => (
+              <li key={fighter.name}>
+                <img src={fighter.img} alt={fighter.name} />
+                <h2>{fighter.name}</h2>
+                <p>Price: ${fighter.price}</p>
+                <p>Strength: {fighter.strength}</p>
+                <p>Agility: {fighter.agility}</p>
+                <button onClick={() => handleRemoveFromTeam(fighter)}>Remove</button>
+              </li>
+            ))}
+          </ul>
     </>
-  )
+  );
 }
 
 export default App
