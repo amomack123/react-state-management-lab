@@ -1,15 +1,12 @@
-import ZombieFighters from "./ZombieFighters.jsx"
-import { useState, Fragment } from 'react'
-import './App.css'
-import TeamRoster from './TeamRoster.jsx'
+import { useState, Fragment } from 'react';
+import './App.css';
 
 const App = () => {
-
-  const [team, setTeam] = useState([])
-  const [totalStrength, setStrength] = useState(0)
-  const [totalAgility, setAgility] = useState(0)
-  const [money, setMoney] = useState(100)
-  const [zombieFighters, setZombieFighters] = useState([
+  const [team, setTeam] = useState([]);
+  const [totalStrength, setStrength] = useState(0);
+  const [totalAgility, setAgility] = useState(0);
+  const [money, setMoney] = useState(100);
+  const [zombieFighters] = useState([
     {
       name: 'Survivor',
       price: 12,
@@ -80,28 +77,25 @@ const App = () => {
       agility: 6,
       img: 'https://via.placeholder.com/150/602b9e',
     },
-  ])
-
+  ]);
 
   const handleAddFighter = (fighter) => {
     if (money < fighter.price) {
-      console.log('Not enough money')
+      console.log('Not enough money');
     } else {
-      const newTeamArray = [...team, fighter]
-      setTeam(newTeamArray)
-      setMoney(money - fighter.price)
-      setStrength(totalStrength + fighter.strength)
-      setAgility(totalAgility + fighter.agility)
+      setTeam([...team, fighter]);
+      setMoney(money - fighter.price);
+      setStrength(totalStrength + fighter.strength);
+      setAgility(totalAgility + fighter.agility);
     }
-  }
-
+  };
+  
   const handleRemoveFighter = (fighter, idx) => {
-    const newTeamArray = team.filter((f, index)=> index !== idx)
-    setTeam(newTeamArray)
-    setMoney(money + fighter.price)
-    setStrength(totalStrength - fighter.strength)
-    setAgility(totalAgility - fighter.agility)
-  }
+    setTeam(team.filter((_, index) => index !== idx));
+    setMoney(money + fighter.price);
+    setStrength(totalStrength - fighter.strength);
+    setAgility(totalAgility - fighter.agility);
+  };  
 
   return (
     <>
@@ -109,23 +103,39 @@ const App = () => {
       <h2>Money: {money}</h2>
       <h2>Team Strength: {totalStrength}</h2>
       <h2>Team Agility: {totalAgility}</h2>
-      <h2>Team: </h2>
-      {team.length === 0 ? <p>Pick some team members!</p> : <TeamRoster team={ team } handleRemoveFighter={handleRemoveFighter} /> }
+      <h2>Team:</h2>
+      {team.length === 0 ? (
+        <p>Pick some team members!</p>
+      ) : (
+        <ul>
+          {team.map((fighter, idx) => (
+            <li key={idx}>
+              <img src={fighter.img} alt={fighter.name} />
+              <h2>{fighter.name}</h2>
+              <p>Price: ${fighter.price}</p>
+              <p>Strength: {fighter.strength}</p>
+              <p>Agility: {fighter.agility}</p>
+              <button onClick={() => handleRemoveFighter(fighter, idx)}>Remove</button>
+            </li>
+          ))}
+        </ul>
+      )}
+      
       <h2>Fighters</h2>
       <ul>
-            {team.map((fighter) => (
-              <li key={fighter.name}>
-                <img src={fighter.img} alt={fighter.name} />
-                <h2>{fighter.name}</h2>
-                <p>Price: ${fighter.price}</p>
-                <p>Strength: {fighter.strength}</p>
-                <p>Agility: {fighter.agility}</p>
-                <button onClick={() => handleRemoveFromTeam(fighter)}>Remove</button>
-              </li>
-            ))}
-          </ul>
+        {zombieFighters.map((fighter) => (
+          <li key={fighter.name}>
+            <img src={fighter.img} alt={fighter.name} />
+            <h2>{fighter.name}</h2>
+            <p>Price: ${fighter.price}</p>
+            <p>Strength: {fighter.strength}</p>
+            <p>Agility: {fighter.agility}</p>
+            <button onClick={() => handleAddFighter(fighter)}>Add to Team</button>
+          </li>
+        ))}
+      </ul>
     </>
-  );
-}
+  );  
+};
 
-export default App
+export default App;
